@@ -2,4 +2,4 @@
 deployment:
  tasks:
  - export DEPLOYPATH=/home/lazobmmp/public_html/edulogia.lazosnexos.com
- - /bin/rsync -av system/index.html $DEPLOYPATH
+ - /bin/rsync -av Scalar/system/index.html $DEPLOYPATH

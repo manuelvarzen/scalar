@@ -1,0 +1,6 @@
+---
+deployment:
+ tasks:
+ - export DEPLOYPATH=/home/lazobmmp/public_html/
+ - /bin/rsync -av /system/index.html $DEPLOYPATH
+ 

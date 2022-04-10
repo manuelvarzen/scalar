@@ -4167,6 +4167,7 @@ window.scalarvis = { instanceCount: -1 };
 
       draw() {
         super.draw();
+        this.updateNoResultsMessage(tags);
       }
 
       getHelpContent() {
@@ -4233,14 +4234,14 @@ window.scalarvis = { instanceCount: -1 };
             if (null == relations[k].target) continue;  // Not part of the path
             var containingPathNodes = relations[k].body.getRelations('path', 'outgoing');
             if (-1 == urls.indexOf(relations[k].target.url)) urls.push(relations[k].target.url);
-            titleMarkup = '<div class="caption_font path-breadcrumb"><a href="' + relations[k].body.url + '">' + pathTitle + '</a> (' + relations[k].index + '/' + containingPathNodes.length + ')</div><h2 class="heading_font heading_weight"><a href="' + relations[k].target.url + '">' + relations[k].target.getDisplayTitle() + '</a></h2>';
             var thumbnail = relations[k].target.thumbnail;
             var description = relations[k].target.getDescription(true);
-            if (null != thumbnail) thumbnailMarkup = '<img style="float:right; margin: 0 0 1rem 1rem;" src="' + thumbnail + '" alt="Thumbnail image" width="120" />';
-            if (description && description.length) descriptionMarkup = description;
+            titleMarkup = '<div class="caption_font path-breadcrumb"><a href="' + relations[k].body.url + '">' + pathTitle + '</a> (' + relations[k].index + '/' + containingPathNodes.length + ')</div><h2 class="heading_font heading_weight"><a href="' + relations[k].target.url + '">' + relations[k].target.getDisplayTitle() + '</a></h2>';
+            thumbnailMarkup = (null != thumbnail) ? '<img style="float:right; margin: 0 0 1rem 1rem;" src="' + thumbnail + '" alt="Thumbnail image" width="120" />' : '';
+            descriptionMarkup = (description && description.length) ? description : '';
             contentString = '<div class="google-info-window caption_font">' + titleMarkup + '<div>' + thumbnailMarkup + descriptionMarkup + '</div>';
             var icon = this.getIcon(relations[k].target.scalarTypes);
-            var coords = this.drawMarkers(relations[k].target, title, contentString, icon);
+            var coords = this.drawMarkers(relations[k].target, pathTitle, contentString, icon);
             if (coords.length) {
               for (var m = 0; m < coords.length; m++) {
                 pathCoordinates.push(coords[m]);
@@ -4262,11 +4263,11 @@ window.scalarvis = { instanceCount: -1 };
         for (var j = 0; j < base.sortedNodes.length; j++) {
           if (-1 != urls.indexOf(base.sortedNodes[j].url)) continue;
           var title = base.sortedNodes[j].getDisplayTitle();
-          titleMarkup = '<h2 class="heading_font heading_weight"><a href="' + base.sortedNodes[j].url + '">' + title + '</a></h2>';
           var thumbnail = base.sortedNodes[j].thumbnail;
           var description = base.sortedNodes[j].getDescription(true);
-          if (null != thumbnail) thumbnailMarkup = '<img style="float:right; margin: 0 0 1rem 1rem;" src="' + thumbnail + '" alt="Thumbnail image" width="120" />';
-          if (description && description.length) descriptionMarkup = description;
+          titleMarkup = '<h2 class="heading_font heading_weight"><a href="' + base.sortedNodes[j].url + '">' + title + '</a></h2>';
+          thumbnailMarkup = (null != thumbnail) ? '<img style="float:right; margin: 0 0 1rem 1rem;" src="' + thumbnail + '" alt="Thumbnail image" width="120" />' : '';
+          descriptionMarkup = (description && description.length) ? description : '';
           contentString = '<div class="google-info-window caption_font">' + titleMarkup + '<div>' + thumbnailMarkup + descriptionMarkup + '</div>';
           var icon = this.getIcon(base.sortedNodes[j].scalarTypes);
           var coords = this.drawMarkers(base.sortedNodes[j], title, contentString, icon);

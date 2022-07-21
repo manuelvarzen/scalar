@@ -745,13 +745,17 @@ class System extends MY_Controller {
 								$this->books->delete($book->book_id);
 							}
 						}
-						log_message('error', 'Scalar: Admin user deleted user id: ' . $user . ', from IP address: ' . $this->getUserIpAddr().'.');
+						log_message('error', 'Scalar: Admin user deleted user id: ' . $user_id. ', from IP address: ' . $this->getUserIpAddr().'.');
 						$this->users->delete($user_id);
 					}
 					// Don't bresk
 				case "get_recent_users":  // Admin: Tools
 					if (!$this->data['login_is_super']) $this->kickout();
 					$this->data['recent_user_list'] = $this->users->get_all(0, true, 'user_id', 'desc');
+					break;
+				case "get_recent_pages":  // Admin: Tools
+					if (!$this->data['login_is_super']) $this->kickout();
+					$this->data['recent_pages_list'] = $this->pages->get_recent();
 					break;
 				case "do_save_disallowed_emails":  // Admin: Tools
 					if (!$this->data['login_is_super']) $this->kickout();

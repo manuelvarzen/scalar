@@ -690,6 +690,22 @@ class System extends MY_Controller {
 					log_message('error', 'Scalar: Admin user added user: ' . $array['fullname'] . ', with email: ' . $array['email'] . ' from IP: ' . $this->getUserIpAddr().'.');
 					header('Location: '.$this->base_url.$get);
 					exit;
+				case 'do_deactivate': // Admin: Manage Users
+					if (!$this->data['login_is_super']) $this->kickout();
+					$zone = $this->data['zone'];
+					$pill = (isset($_REQUEST['pill'])) ? $_REQUEST['pill'] : null;
+					$tab = (isset($_REQUEST['tab'])) ? '#'.$_REQUEST['tab'] : null;
+					$this->load->model('resource_model', 'resources');
+					$user = $this->users->get_by_user_id($user_id);
+					$this->resources->addEmailToDisallowed($user->email);
+					$user_id =@ (int) $_REQUEST['user_id'];
+					$this->users->make_books_private($user_id);
+					$get = '?action=deactivate&zone='.$zone;
+					if (!empty($book_id)) $get .= '&book_id='.$book_id;
+					if (!empty($pill)) $get .= '&pill='.$pill;
+					$get .= (!empty($tab)) ? $tab : '#tabs-'.$zone;
+					header('Location: '.$this->base_url.$get);
+					exit;
 				case 'do_delete':  // Admin: All Users & All Books
 					if (!$this->data['login_is_super']) $this->kickout();
 					$zone = $this->data['zone'];
@@ -936,6 +952,7 @@ class System extends MY_Controller {
 					break;
 			}
 			if ('disallowed-emails' == $pill) {
+				$this->load->model('resource_model', 'resources');
 				$json = $this->resources->get('disallowed_emails');
 				$arr = json_decode($json, true);
 				if (empty($arr)) $arr = array();
@@ -1081,6 +1098,7 @@ class System extends MY_Controller {
 					$this->data['content'][$key]->end_seconds = $row->end_seconds;
 					$this->data['content'][$key]->points = $row->points;
 					$this->data['content'][$key]->position_3d = $row->position_3d;
+					$this->data['content'][$key]->position_gis = $row->position_gis;
 					$this->data['content'][$key]->start_line_num = $row->start_line_num;
 					$this->data['content'][$key]->end_line_num = $row->end_line_num;
 					$versions = $this->versions->get_single($this->data['content'][$key]->content_id, $this->data['content'][$key]->recent_version_id);

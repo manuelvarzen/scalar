@@ -298,6 +298,7 @@ $(document).ready(function() {
 						<th>Password</th>
 						<th>URL</th>
 						<th>Books</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -327,6 +328,18 @@ $(document).ready(function() {
 						echo '</a>, '.$book->relationship.'<br />';
 					}
 					echo "</td>\n";
+					$user_is_deactivated = false;
+					if (isset($disallowed_emails)) {
+						if (in_array($users[$i]->email, $disallowed_emails)) {
+							$user_is_deactivated = true;
+						}
+					}
+					if (!$user_is_deactivated) {
+						echo '<td><a href="'.confirm_slash(base_url()).'system/dashboard?action=do_deactivate&user_id='.$users[$i]->user_id.'&type=users&zone=all-users&pill=manage-users&tab=tabs-utils" onclick="if (!confirm(\'Are you sure you wish to DEACTIVATE this user? This will make all of their books private and add their email to the disallowed list, preventing them from logging in.\')) return false;">Deactivate</a><br />';
+					} else {
+						echo '<td>Inactive<br />';
+					}
+					echo "</td>\n";
 					echo "</tr>\n";
 				}
 			}
@@ -343,7 +356,7 @@ $(document).ready(function() {
 			<small>Add new user:</small>
 			<div id="manage-users-add-new" class="form-group form-group-sm">
 				<input tabindex="1" class="form-control" type="text" name="email" value="" placeholder="Email address" />&nbsp;
-				<input tabindex="2" class="form-control" type="text" name="fullname" value="" placeholder="Full nane" />&nbsp;
+				<input tabindex="2" class="form-control" type="text" name="fullname" value="" placeholder="Full name" />&nbsp;
 				<input tabindex="3" class="form-control" type="password" name="password_1" value="" placeholder="Password" />&nbsp;
 				<input tabindex="4" class="form-control" type="password" name="password_2" value="" placeholder="Retype password" />&nbsp;
 				<input tabindex="5" class="btn btn-sm" type="submit" value="Add" />
@@ -713,8 +726,8 @@ $(document).ready(function() {
 			<form action="<?=confirm_slash(base_url())?>system/dashboard?book_id=<?=((isset($book)&&!empty($book))?$book->book_id:0)?>&zone=utils&pill=list-recent-pages#tabs-utils" method="post">
 			<input type="hidden" name="zone" value="utils" />
 			<input type="hidden" name="action" value="get_recent_pages" />
-			<h4>List recently edited pages</h4>
-			Lists the 200 most recently edited pages, across all books.<br /><br />
+			<h4>List recently edited pages and media</h4>
+			Lists the 400 most recently edited pages and media items, across all books.<br /><br />
 			<div class="div_list"><?php
 				if (!isset($recent_pages_list)) {
 

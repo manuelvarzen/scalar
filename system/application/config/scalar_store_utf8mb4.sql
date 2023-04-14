@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS `scalar_db_books` (
   `editions` text COLLATE utf8mb4_general_ci DEFAULT NULL,
   `user` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
   `created` datetime NOT NULL,
+  `terms_of_service` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `privacy_policy` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`book_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -54,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `scalar_db_rel_annotated` (
   `end_line_num` smallint(2) unsigned NOT NULL DEFAULT '0',
   `points` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `position_3d` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `position_gis` varchar(128) COLLATE utf8mb4_general_ci DEFAULT NULL,
   KEY `parent_child` (`parent_version_id`,`child_version_id`),
   KEY `child_parent` (`child_version_id`,`parent_version_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

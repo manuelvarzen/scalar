@@ -467,9 +467,11 @@
 
                 page.pageWidth = parseInt($('.page').width());
 
-                // calculate the size of the content area minus margin-s
+                // calculate the size of the content area minus margins
                 var temp = $('<div class="body_copy"></div>');
                 temp.appendTo('.page');
+                // these two may differ depending on the width of the window
+                // (large windows have extra margin on the right side)
                 page.pageWidthMinusMargins = page.pageWidth - (parseInt(temp.css('padding-left')) * 2);
                 page.bodyCopyWidth = temp.width();
                 temp.remove();
@@ -1420,8 +1422,10 @@
                 }
                 $par.append('<a href="http://scalar.usc.edu/scalar"><img src="' + page.options.root_url + '/images/scalar_logo_small.png" width="18" height="16" alt="Scalar logo"/></a>');
                 $par.append(' Powered by <a href="http://scalar.usc.edu/scalar">Scalar</a> (<a href="https://github.com/anvc/scalar">' + $('link#scalar_version').attr('href').trim() + '</a>) | ');
-                $par.append('<a href="http://scalar.usc.edu/terms-of-service/">Terms of Service</a> | ');
-                $par.append('<a href="http://scalar.usc.edu/privacy-policy/">Privacy Policy</a> | ');
+                var termsOfService = $('link#terms_of_service').attr('href')
+                if (termsOfService) $par.append('<a href="' + termsOfService + '">Terms of Service</a> | ');
+                var privacyPolicy = $('link#privacy_policy').attr('href')
+                if (privacyPolicy) $par.append('<a href="' + privacyPolicy + '">Privacy Policy</a> | ');
                 $par.append('<a href="http://scalar.usc.edu/contact/">Scalar Feedback</a>');
             },
 
@@ -3095,7 +3099,7 @@
                             if(typeof page.pendingDeferredScripts.GoogleMaps == 'undefined'){
                                 page.pendingDeferredScripts.GoogleMaps = [];
                                 $.when(
-                                    $.getScript('https://maps.googleapis.com/maps/api/js?key=' + $('link#google_maps_key').attr('href'))
+                                    $.getScript('https://maps.googleapis.com/maps/api/js?callback=initGoogleMap&key=' + $('link#google_maps_key').attr('href'))
                                 ).then(function(){
                                     for(var i = 0; i < page.pendingDeferredScripts.GoogleMaps.length; i++){
                                         page.pendingDeferredScripts.GoogleMaps[i].resolve();
